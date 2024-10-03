@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سیستم حضور و غیاب</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #2c3e50; /* خاکستری تیره */
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            color: #ecf0f1; /* رنگ متن */
+        }
+        #entryPage, #formPage, #listPage, #statusPage {
+            background-color: #34495e; /* رنگ کارت */
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            display: none; /* به صورت پیش‌فرض مخفی است */
+            transition: all 0.3s ease; /* انیمیشن برای انتقال بین صفحات */
+        }
+        #entryPage.active, #formPage.active, #listPage.active, #statusPage.active {
+            display: block; /* فقط صفحه فعال نمایش داده می‌شود */
+        }
+        button {
+            background-color: #27ae60; /* رنگ دکمه‌ها */
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #218838; /* رنگ دکمه‌ها هنگام هاور */
+            transform: scale(1.05); /* انیمیشن بزرگ‌ شدن دکمه */
+        }
+        .list-group-item {
+            opacity: 0;
+            transform: translateY(-20px);
+            animation: fadeIn 0.5s forwards;
+        }
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        /* استایل برای زمان */
+        .time {
+            font-size: 0.8em;
+            color: #bbb;
+        }
+        /* طراحی جدول */
+        table {
+            background-color: #2980b9; /* رنگ پس‌زمینه جدول */
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        th, td {
+            text-align: center;
+            color: #fff; /* رنگ متن جدول */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- صفحه ورود -->
+    <div id="entryPage" class="active">
+        <h1 class="mb-5">ورود به سیستم حضور و غیاب</h1>
+        <button id="enterBtn" class="btn btn-dark">ورود</button>
+    </div>
+
+    <!-- صفحه ثبت نام -->
+    <div id="formPage">
+        <h1 class="mb-4">ثبت حضور و غیاب</h1>
+        <form id="attendanceForm">
+            <div class="mb-3">
+                <input type="text" id="fullName" class="form-control" placeholder="نام و نام خانوادگی" required>
+            </div>
+            <button type="submit" class="btn btn-primary">ثبت</button>
+        </form>
+        <button id="viewListBtn" class="btn btn-secondary">مشاهده لیست</button>
+    </div>
+
+    <!-- صفحه لیست افراد -->
+    <div id="listPage">
+        <h1 class="mb-4">لیست حضور و غیاب</h1>
+        <ul id="attendanceList" class="list-group">
+            <!-- اسامی و زمان‌ها در اینجا اضافه می‌شوند -->
+        </ul>
+        <button id="viewStatusBtn" class="btn btn-success">مشاهده وضعیت</button>
+    </div>
+
+    <!-- صفحه وضعیت افراد -->
+    <div id="statusPage">
+        <h1 class="mb-4">وضعیت حضور و غیاب</h1>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>نام و نام خانوادگی</th>
+                    <th>وضعیت</th>
+                    <th>زمان ثبت</th>
+                </tr>
+            </thead>
+            <tbody id="statusTable">
+                <!-- وضعیت‌ها در اینجا اضافه می‌شوند -->
+            </tbody>
+        </table>
+        <button id="backToFormBtn" class="btn btn-secondary">بازگشت به ثبت نام</button>
+    </div>
+
+    <script src="script/app.js"></script>
+    <script src="service-worker.js"></script>
+</body>
+</html>
