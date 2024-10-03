@@ -18,33 +18,13 @@ document.addEventListener('DOMContentLoaded', function () {
         localStorage.setItem('attendanceData', JSON.stringify(attendanceData));
     }
 
-    // تابع تبدیل میلادی به شمسی
-    function gregorianToJalali(gy, gm, gd) {
-        const g_d_m = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-        let jy = (gy <= 1600) ? 0 : 979;
-        gy -= (gy <= 1600) ? 621 : 1600;
-        let gy2 = (gm > 2) ? (gy + 1) : gy;
-        let days = (365 * gy) + parseInt((gy2 + 3) / 4) - parseInt((gy2 + 99) / 100) + parseInt((gy2 + 399) / 400) - 80 + gd;
-        for (let i = 0; i < gm; ++i) days += g_d_m[i];
-        jy += 33 * parseInt(days / 12053);
-        days %= 12053;
-        jy += 4 * parseInt(days / 1461);
-        days %= 1461;
-        if (days > 365) {
-            jy += parseInt((days - 1) / 365);
-            days = (days - 1) % 365;
-        }
-        const jm = (days < 186) ? 1 + parseInt(days / 31) : 7 + parseInt((days - 186) / 30);
-        const jd = (days < 186) ? (1 + (days % 31)) : (1 + ((days - 186) % 30));
-        return [jy, jm, jd];
-    }
-
     // تابع برای دریافت تاریخ جاری شمسی
     function getCurrentJalaliDate() {
         const now = new Date();
         const gy = now.getFullYear();
         const gm = now.getMonth() + 1;
         const gd = now.getDate();
+        // تبدیل تاریخ میلادی به شمسی
         const [jy, jm, jd] = gregorianToJalali(gy, gm, gd);
         return `${jy}/${jm}/${jd}`;
     }
@@ -60,10 +40,12 @@ document.addEventListener('DOMContentLoaded', function () {
         e.preventDefault();
 
         const fullName = document.getElementById('fullName').value;
+        const currentDateTime = new Date().toLocaleString('fa-IR'); // زمان ثبت
+
         const person = {
             name: fullName,
             status: null,  // وضعیت هنوز مشخص نشده است
-            date: null     // تاریخ حضور یا غیاب
+            dateTime: currentDateTime // زمان حضور
         };
         attendanceData.push(person);  // ذخیره نام در آرایه
         saveToLocalStorage();  // ذخیره در localStorage
@@ -86,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function () {
             listItem.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center');
 
             listItem.innerHTML = `
-                ${person.name}
+                ${person.name} - ثبت شده در ${person.dateTime}
                 <div>
                     <button class="btn btn-success btn-sm presentBtn" data-index="${index}">حاضر</button>
                     <button class="btn btn-danger btn-sm absentBtn" data-index="${index}">غایب</button>
@@ -101,22 +83,18 @@ document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('.presentBtn').forEach(function(btn) {
             btn.addEventListener('click', function() {
                 const index = this.getAttribute('data-index');
-                const currentDate = getCurrentJalaliDate(); // گرفتن تاریخ جاری شمسی
                 attendanceData[index].status = 'حاضر';
-                attendanceData[index].date = currentDate;
                 saveToLocalStorage();  // ذخیره در localStorage
-                alert(attendanceData[index].name + ' به عنوان "حاضر" در تاریخ ' + currentDate + ' ثبت شد');
+                alert(attendanceData[index].name + ' به عنوان "حاضر" ثبت شد');
             });
         });
 
         document.querySelectorAll('.absentBtn').forEach(function(btn) {
             btn.addEventListener('click', function() {
                 const index = this.getAttribute('data-index');
-                const currentDate = getCurrentJalaliDate(); // گرفتن تاریخ جاری شمسی
                 attendanceData[index].status = 'غایب';
-                attendanceData[index].date = currentDate;
                 saveToLocalStorage();  // ذخیره در localStorage
-                alert(attendanceData[index].name + ' به عنوان "غایب" در تاریخ ' + currentDate + ' ثبت شد');
+                alert(attendanceData[index].name + ' به عنوان "غایب" ثبت شد');
             });
         });
 
@@ -146,7 +124,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 row.innerHTML = `
                     <td>${person.name}</td>
                     <td>${person.status}</td>
-                    <td>${person.date}</td>
+                    <td>${person.dateTime}</td>
                 `;
                 statusTable.appendChild(row);
             }
@@ -160,12 +138,23 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-        navigator.serviceWorker.register('service-worker.js').then(function(registration) {
-            console.log('ServiceWorker registered with scope:', registration.scope);
-        }, function(err) {
-            console.log('ServiceWorker registration failed:', err);
-        });
-    });
+// تابع تبدیل میلادی به شمسی
+function gregorianToJalali(gy, gm, gd) {
+    const g_d_m = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    let jy = (gy <= 1600) ? 0 : 979;
+    gy -= (gy <= 1600) ? 621 : 1600;
+    let gy2 = (gm > 2) ? (gy + 1) : gy;
+    let days = (365 * gy) + parseInt((gy2 + 3) / 4) - parseInt((gy2 + 99) / 100) + parseInt((gy2 + 399) / 400) - 80 + gd;
+    for (let i = 0; i < gm; ++i) days += g_d_m[i];
+    jy += 33 * parseInt(days / 12053);
+    days %= 12053;
+    jy += 4 * parseInt(days / 1461);
+    days %= 1461;
+    if (days > 365) {
+        jy += parseInt((days - 1) / 365);
+        days = (days - 1) % 365;
+    }
+    const jm = (days < 186) ? 1 + parseInt(days / 31) : 7 + parseInt((days - 186) / 30);
+    const jd = (days < 186) ? (1 + (days % 31)) : (1 + ((days - 186) % 30));
+    return [jy, jm, jd];
 }
