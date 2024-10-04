@@ -17,7 +17,7 @@
             margin: 0;
             color: #ecf0f1; /* رنگ متن */
         }
-        #entryPage, #formPage, #listPage, #statusPage {
+        #entryPage, #formPage, #listPage, #statusPage, #gradesPage {
             background-color: #34495e; /* رنگ کارت */
             padding: 40px;
             border-radius: 10px;
@@ -25,7 +25,7 @@
             display: none; /* به صورت پیش‌فرض مخفی است */
             transition: all 0.3s ease; /* انیمیشن برای انتقال بین صفحات */
         }
-        #entryPage.active, #formPage.active, #listPage.active, #statusPage.active {
+        #entryPage.active, #formPage.active, #listPage.active, #statusPage.active, #gradesPage.active {
             display: block; /* فقط صفحه فعال نمایش داده می‌شود */
         }
         button {
@@ -108,23 +108,35 @@
     </div>
 
     <!-- صفحه نمرات -->
-<div id="gradesPage" style="display: none;">
-    <h1 class="mb-4">نمرات دانشجویان</h1>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>نام و نام خانوادگی</th>
-                <th>نمره</th>
-            </tr>
-        </thead>
-        <tbody id="gradesTable">
-            <!-- نمرات در اینجا اضافه می‌شوند -->
-        </tbody>
-    </table>
-    <button id="submitGradesBtn" class="btn btn-primary">ثبت نمرات</button> <!-- دکمه ثبت نمرات -->
-    <button id="backToListBtn" class="btn btn-secondary">بازگشت به لیست</button>
-</div>
+    <div id="gradesPage" style="display: none;">
+        <h1 class="mb-4">نمرات دانشجویان</h1>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>نام و نام خانوادگی</th>
+                    <th>نمره</th>
+                </tr>
+            </thead>
+            <tbody id="gradesTable">
+                <!-- نمرات در اینجا اضافه می‌شوند -->
+            </tbody>
+        </table>
+        <button id="submitGradesBtn" class="btn btn-primary">ثبت نمرات</button>
+        <button id="backToListBtn" class="btn btn-secondary">بازگشت به لیست</button>
+    </div>
 
     <script src="script.js"></script>
+    <script>
+        // ثبت Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('service-worker.js').then(function(registration) {
+                    console.log('ServiceWorker registered with scope:', registration.scope);
+                }, function(err) {
+                    console.log('ServiceWorker registration failed:', err);
+                });
+            });
+        }
+    </script>
 </body>
 </html>
