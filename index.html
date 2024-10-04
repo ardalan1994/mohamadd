@@ -43,22 +43,6 @@
             background-color: #218838; /* رنگ دکمه‌ها هنگام هاور */
             transform: scale(1.05); /* انیمیشن بزرگ‌ شدن دکمه */
         }
-        .list-group-item {
-            opacity: 0;
-            transform: translateY(-20px);
-            animation: fadeIn 0.5s forwards;
-        }
-        @keyframes fadeIn {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        /* استایل برای زمان */
-        .time {
-            font-size: 0.8em;
-            color: #bbb;
-        }
         /* طراحی جدول */
         table {
             background-color: #2980b9; /* رنگ پس‌زمینه جدول */
@@ -86,6 +70,9 @@
             <div class="mb-3">
                 <input type="text" id="fullName" class="form-control" placeholder="نام و نام خانوادگی" required>
             </div>
+            <div class="mb-3">
+                <input type="text" id="class" class="form-control" placeholder="کلاس" required>
+            </div>
             <button type="submit" class="btn btn-primary">ثبت</button>
         </form>
         <button id="viewListBtn" class="btn btn-secondary">مشاهده لیست</button>
@@ -98,6 +85,7 @@
             <!-- اسامی و زمان‌ها در اینجا اضافه می‌شوند -->
         </ul>
         <button id="viewStatusBtn" class="btn btn-success">مشاهده وضعیت</button>
+        <button id="addGradesBtn" class="btn btn-info">اضافه کردن نمرات</button>
     </div>
 
     <!-- صفحه وضعیت افراد -->
@@ -107,6 +95,7 @@
             <thead>
                 <tr>
                     <th>نام و نام خانوادگی</th>
+                    <th>کلاس</th>
                     <th>وضعیت</th>
                     <th>زمان ثبت</th>
                 </tr>
@@ -118,18 +107,24 @@
         <button id="backToFormBtn" class="btn btn-secondary">بازگشت به ثبت نام</button>
     </div>
 
+    <!-- صفحه نمرات -->
+<div id="gradesPage" style="display: none;">
+    <h1 class="mb-4">نمرات دانشجویان</h1>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>نام و نام خانوادگی</th>
+                <th>نمره</th>
+            </tr>
+        </thead>
+        <tbody id="gradesTable">
+            <!-- نمرات در اینجا اضافه می‌شوند -->
+        </tbody>
+    </table>
+    <button id="submitGradesBtn" class="btn btn-primary">ثبت نمرات</button> <!-- دکمه ثبت نمرات -->
+    <button id="backToListBtn" class="btn btn-secondary">بازگشت به لیست</button>
+</div>
+
     <script src="script.js"></script>
-    <script>
-        // ثبت Service Worker
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
-                navigator.serviceWorker.register('service-worker.js').then(function(registration) {
-                    console.log('ServiceWorker registered with scope:', registration.scope);
-                }, function(err) {
-                    console.log('ServiceWorker registration failed:', err);
-                });
-            });
-        }
-    </script>
 </body>
 </html>
